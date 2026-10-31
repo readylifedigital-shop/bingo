@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Christmas Bingo – Play on Your Phone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#B0202A;--red2:#C8323C;--green:#1E5B3A;--green2:#2E7A4F;--gold:#C99A2E;--cream:#FBF4E8;--ink:#2A2420}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:var(--cream);
+ background-image:radial-gradient(circle at 20% 10%,rgba(176,32,42,.06) 0 120px,transparent 121px),radial-gradient(circle at 85% 80%,rgba(30,91,58,.07) 0 160px,transparent 161px)}
+.wrap{max-width:520px;margin:0 auto;padding:18px 14px 40px}
+header{text-align:center;margin-bottom:14px}
+.script{font-family:"Mountains of Christmas",cursive;color:var(--red);font-size:34px;line-height:1}
+h1{font-size:15px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-top:4px;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 18px;font:600 16px Poppins,sans-serif;cursor:pointer;color:#fff;background:var(--green);box-shadow:0 3px 0 #123d26;transition:transform .08s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #123d26}
+.btn.red{background:var(--red);box-shadow:0 3px 0 #7a141b}
+.btn.ghost{background:#fff;color:var(--green);box-shadow:0 0 0 1.5px var(--green) inset}
+.btn.small{padding:9px 14px;font-size:14px;border-radius:11px}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 8px 30px rgba(60,30,20,.12);border:3px solid var(--red)}
+.letters,.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.letters div{font:700 30px/1.2 Poppins;color:#fff;text-align:center;border-radius:9px;background:var(--red)}
+.letters div:nth-child(even){background:var(--green)}
+.grid{margin-top:6px}
+.cell{aspect-ratio:1;border:2px solid var(--green);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;
+ font:500 clamp(11px,3.4vw,15px)/1.15 Poppins;padding:2px;cursor:pointer;user-select:none;position:relative;transition:background .15s,transform .1s;color:var(--ink);overflow-wrap:normal;word-break:normal;hyphens:manual}
+.cell.m{font-size:clamp(10px,2.85vw,13px)}.cell.l{font-size:clamp(9px,2.45vw,12px);letter-spacing:-.2px}
+.cell:active{transform:scale(.95)}
+.cell.on{background:var(--red);border-color:var(--red);color:#fff}
+.cell.on::after{content:"";position:absolute;inset:6px;border:2px dashed rgba(255,255,255,.55);border-radius:50%}
+.cell.free{background:var(--cream);border-color:var(--gold);color:var(--red);font-weight:700;letter-spacing:1px;cursor:default}
+.cell.win{animation:pulse 1s ease-in-out infinite;background:var(--gold)!important;border-color:var(--gold)!important;color:#fff!important}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:10px 2px 0;font-size:12px;color:#8a7f76;letter-spacing:1px}
+.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0 20px}
+.picker a{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:14px;background:#fff;border:2px solid var(--green);text-decoration:none;color:var(--green);font:700 22px Poppins}
+.picker a small{font:500 10px Poppins;letter-spacing:1.5px;color:var(--red)}
+.panel{background:#fff;border-radius:18px;padding:18px;box-shadow:0 8px 30px rgba(60,30,20,.1);margin-bottom:14px}
+.panel h2{font-size:16px;color:var(--green);margin-bottom:6px}
+.panel p{font-size:13.5px;line-height:1.5;color:#5d534c}
+.call{text-align:center;padding:26px 10px;border-radius:18px;background:var(--green);color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+.call .lbl{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.8}
+.call .word{font:700 clamp(34px,11vw,52px)/1.1 Poppins;margin:10px 0 6px}
+.call .count{font-size:13px;opacity:.85}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips span{font-size:12.5px;padding:5px 10px;border-radius:20px;background:var(--cream);border:1px solid #e3d5c3}
+.chips span:first-child{background:var(--red);color:#fff;border-color:var(--red)}
+.overlay{position:fixed;inset:0;background:rgba(30,20,15,.55);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:22px;padding:26px 22px;text-align:center;max-width:360px;width:100%;border:4px solid var(--gold);animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.modal .big{font:700 52px/1 "Mountains of Christmas";color:var(--red);margin-bottom:8px}
+.modal p{font-size:14.5px;color:#5d534c;margin-bottom:18px;line-height:1.5}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:30}
+.back{font-size:14px;color:var(--green);text-decoration:none;font-weight:600}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.foot{text-align:center;font-size:11px;color:#a1958b;margin-top:22px;letter-spacing:.5px}
+.hint{text-align:center;font-size:12.5px;color:#7a6e65;margin-top:10px}
+</style></head><body>
+<div class="wrap" id="app"></div>
+<div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
+<canvas id="fx"></canvas>
+<script>
+const DATA={"words": ["Santa", "Reindeer", "Sleigh", "Elf", "Snowman", "Stocking", "Candy Cane", "Mistletoe", "Holly", "Wreath", "Ornament", "Tinsel", "Star", "Angel", "Bell", "Gift", "Bow", "Cookies", "Milk", "Chimney", "Fireplace", "Gingerbread", "Snowflake", "Mittens", "Scarf", "Hot Cocoa", "Carols", "Lights", "Tree", "North Pole", "Workshop", "Toy Soldier", "Nutcracker", "Poinsettia", "Eggnog", "Ugly Sweater", "Sled", "Icicle", "Ribbon", "Wrapping Paper"], "cards": [["Mistletoe", "Fireplace", "Nutcracker", "Icicle", "Candy Cane", "Bell", "Carols", "Toy Soldier", "Tree", "Wrapping Paper", "Santa", "Chimney", "Sleigh", "Elf", "Wreath", "Poinsettia", "Eggnog", "North Pole", "Gingerbread", "Gift", "Ornament", "Ugly Sweater", "Star", "Holly"], ["Snowflake", "Wrapping Paper", "Scarf", "Nutcracker", "Snowman", "Gingerbread", "Stocking", "Milk", "Sled", "Bell", "Ugly Sweater", "Tree", "Fireplace", "Ribbon", "Carols", "Toy Soldier", "Wreath", "Santa", "Tinsel", "Eggnog", "Workshop", "Angel", "Sleigh", "Star"], ["Icicle", "Ugly Sweater", "Toy Soldier", "Mistletoe", "Lights", "Nutcracker", "Wrapping Paper", "Hot Cocoa", "Bow", "Ribbon", "Angel", "Milk", "Gift", "Poinsettia", "Carols", "Santa", "Tree", "Sled", "Snowman", "Reindeer", "Eggnog", "Elf", "North Pole", "Workshop"], ["Wreath", "Workshop", "Bell", "Mistletoe", "North Pole", "Ribbon", "Bow", "Hot Cocoa", "Chimney", "Cookies", "Nutcracker", "Fireplace", "Poinsettia", "Snowflake", "Gift", "Star", "Angel", "Candy Cane", "Wrapping Paper", "Holly", "Santa", "Reindeer", "Snowman", "Icicle"], ["Poinsettia", "Toy Soldier", "Mittens", "Star", "Bow", "Ribbon", "North Pole", "Nutcracker", "Eggnog", "Hot Cocoa", "Angel", "Cookies", "Gingerbread", "Reindeer", "Wreath", "Ornament", "Bell", "Elf", "Icicle", "Ugly Sweater", "Holly", "Lights", "Stocking", "Wrapping Paper"], ["Workshop", "Snowman", "Cookies", "Toy Soldier", "Mittens", "Candy Cane", "Star", "Carols", "Wreath", "Bell", "North Pole", "Santa", "Sleigh", "Tree", "Wrapping Paper", "Milk", "Icicle", "Lights", "Chimney", "Eggnog", "Mistletoe", "Elf", "Reindeer", "Holly"], ["Snowflake", "Wreath", "Santa", "Fireplace", "Toy Soldier", "Holly", "Bell", "Workshop", "Eggnog", "Nutcracker", "Chimney", "Tree", "Wrapping Paper", "Bow", "Ribbon", "Sleigh", "Angel", "Gingerbread", "Stocking", "Snowman", "Milk", "Hot Cocoa", "Carols", "Mittens"], ["Scarf", "Wreath", "Poinsettia", "Star", "Wrapping Paper", "Santa", "Candy Cane", "Ugly Sweater", "Snowman", "Reindeer", "Carols", "Tinsel", "Fireplace", "Tree", "Nutcracker", "Eggnog", "Hot Cocoa", "Bow", "Gift", "Ornament", "Ribbon", "Bell", "Lights", "Elf"], ["Toy Soldier", "North Pole", "Sled", "Ornament", "Wreath", "Poinsettia", "Angel", "Lights", "Gingerbread", "Bell", "Chimney", "Mistletoe", "Wrapping Paper", "Snowflake", "Sleigh", "Cookies", "Star", "Reindeer", "Candy Cane", "Fireplace", "Stocking", "Carols", "Scarf", "Milk"], ["Tree", "Star", "Workshop", "Reindeer", "Holly", "Poinsettia", "Angel", "Ugly Sweater", "Ornament", "Gingerbread", "Lights", "Stocking", "Ribbon", "Nutcracker", "Eggnog", "Cookies", "Hot Cocoa", "Sleigh", "North Pole", "Wreath", "Wrapping Paper", "Tinsel", "Chimney", "Carols"], ["North Pole", "Toy Soldier", "Carols", "Milk", "Wrapping Paper", "Tinsel", "Fireplace", "Workshop", "Tree", "Elf", "Bow", "Hot Cocoa", "Ugly Sweater", "Ribbon", "Holly", "Nutcracker", "Candy Cane", "Mistletoe", "Santa", "Sleigh", "Bell", "Ornament", "Angel", "Stocking"], ["Reindeer", "Snowflake", "Ornament", "Ribbon", "Ugly Sweater", "Eggnog", "Angel", "Mistletoe", "Cookies", "Toy Soldier", "Scarf", "Milk", "Mittens", "Candy Cane", "Tree", "Wreath", "Hot Cocoa", "Holly", "Gingerbread", "Workshop", "Snowman", "Elf", "Sled", "Lights"], ["Lights", "Ornament", "Candy Cane", "Elf", "Snowflake", "Tinsel", "Icicle", "Nutcracker", "Fireplace", "Holly", "Milk", "Carols", "Sleigh", "Wreath", "Ribbon", "Stocking", "Workshop", "Mittens", "Wrapping Paper", "Santa", "Angel", "Ugly Sweater", "Chimney", "Toy Soldier"], ["Elf", "Candy Cane", "Gift", "Reindeer", "Chimney", "Mistletoe", "Ribbon", "Snowflake", "Fireplace", "Scarf", "Bell", "Ugly Sweater", "Toy Soldier", "Lights", "Nutcracker", "Tree", "Sled", "Star", "Ornament", "Workshop", "Poinsettia", "North Pole", "Angel", "Wrapping Paper"], ["Mittens", "Nutcracker", "Bow", "Scarf", "Milk", "Snowflake", "Elf", "Lights", "Reindeer", "Wreath", "Eggnog", "Ornament", "Workshop", "Wrapping Paper", "Sled", "Poinsettia", "Ribbon", "Angel", "Tree", "Ugly Sweater", "Santa", "Cookies", "Gingerbread", "Candy Cane"], ["Ugly Sweater", "Elf", "Mistletoe", "Ornament", "Icicle", "Wrapping Paper", "Sleigh", "Holly", "Snowflake", "Chimney", "Fireplace", "North Pole", "Wreath", "Santa", "Angel", "Milk", "Snowman", "Tinsel", "Hot Cocoa", "Star", "Tree", "Eggnog", "Gingerbread", "Scarf"], ["Holly", "Tinsel", "Eggnog", "Reindeer", "Icicle", "Hot Cocoa", "Bow", "Wreath", "Bell", "Santa", "Workshop", "Wrapping Paper", "Cookies", "Gift", "Angel", "Tree", "Ornament", "Snowman", "Fireplace", "Milk", "Sleigh", "Stocking", "Lights", "Sled"], ["Nutcracker", "Bow", "Gingerbread", "Poinsettia", "Fireplace", "Elf", "Santa", "Gift", "Workshop", "Reindeer", "Mistletoe", "Icicle", "Ribbon", "Snowman", "Mittens", "Star", "Snowflake", "Tinsel", "North Pole", "Cookies", "Holly", "Ornament", "Candy Cane", "Hot Cocoa"], ["Snowflake", "North Pole", "Ribbon", "Ugly Sweater", "Workshop", "Chimney", "Star", "Ornament", "Carols", "Snowman", "Gift", "Tree", "Santa", "Tinsel", "Bow", "Wrapping Paper", "Angel", "Reindeer", "Fireplace", "Stocking", "Sleigh", "Wreath", "Toy Soldier", "Holly"], ["Holly", "Candy Cane", "Reindeer", "Eggnog", "Angel", "Chimney", "Sleigh", "Hot Cocoa", "Scarf", "Cookies", "Bow", "Nutcracker", "Fireplace", "Gingerbread", "Stocking", "North Pole", "Elf", "Poinsettia", "Snowman", "Star", "Ornament", "Workshop", "Wrapping Paper", "Wreath"]]};
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const app=document.getElementById('app'),ov=document.getElementById('ov'),modal=document.getElementById('modal');
+const sz=w=>{const L=Math.max(...w.split(' ').map(x=>x.length));return L>=10?'l':L>=8?'m':''};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LINES=(()=>{const L=[];for(let i=0;i<5;i++){L.push([0,1,2,3,4].map(j=>i*5+j));L.push([0,1,2,3,4].map(j=>j*5+i))}L.push([0,6,12,18,24],[4,8,12,16,20]);return L})();
+function show(html){modal.innerHTML=html;ov.classList.add('show')}
+function hide(){ov.classList.remove('show')}
+ov.addEventListener('click',e=>{if(e.target===ov)hide()});
+
+function home(){
+ app.innerHTML=`<header><div class="script">Merry Christmas</div><h1>Bingo · Play on Your Phone</h1></header>
+ <div class="panel"><h2>Players</h2><p>Scan the QR code on your printed card, or tap your card number below. Tap a square to mark it. Get 5 in a row to win!</p>
+ <div class="picker">${DATA.cards.map((_,i)=>`<a href="#card-${i+1}"><small>CARD</small>${i+1}</a>`).join('')}</div></div>
+ <div class="panel"><h2>Host</h2><p style="margin-bottom:12px">Use the caller to draw words at random. No scissors needed!</p>
+ <div class="row"><a class="btn red" href="#caller" style="text-decoration:none">Open the Caller</a></div></div>
+ <div class="foot">ReadyLifeDigital · Christmas Bingo</div>`;
+}
+
+function card(n){
+ const words=DATA.cards[n-1]; if(!words){location.hash='';return}
+ const cells=[...words.slice(0,12),null,...words.slice(12)];
+ const key='bingo-card-'+n; let marks=S.get(key,[]); let celebrated=S.get(key+'-won',false);
+ app.innerHTML=`<div class="top"><a class="back" href="#">‹ All cards</a><button class="btn ghost small" id="clr">New game</button></div>
+ <div class="card"><div class="letters">${'BINGO'.split('').map(l=>`<div>${l}</div>`).join('')}</div>
+ <div class="grid">${cells.map((w,i)=>w===null?`<div class="cell free on" data-i="${i}">★<br>FREE</div>`:`<div class="cell ${sz(w)}" data-i="${i}">${esc(w)}</div>`).join('')}</div>
+ <div class="meta"><span>CHRISTMAS BINGO</span><span>CARD ${n}</span></div></div>
+ <div class="hint">Tap a square when its word is called. Tap again to undo.</div>
+ <div class="foot">ReadyLifeDigital · Christmas Bingo</div>`;
+ const els=[...app.querySelectorAll('.cell')];
+ function render(){
+  const on=new Set([12,...marks]);
+  els.forEach((el,i)=>{el.classList.toggle('on',on.has(i));el.classList.remove('win')});
+  const wins=LINES.filter(L=>L.every(i=>on.has(i)));
+  wins.flat().forEach(i=>els[i].classList.add('win'));
+  if(wins.length&&!celebrated){celebrated=true;S.set(key+'-won',true);confetti();
+   show(`<div class="big">BINGO!</div><p>You got 5 in a row on <b>Card ${n}</b>!<br>Shout <b>"BINGO!"</b> so the host can check your card.</p><button class="btn red" onclick="hide()">Yay!</button>`)}
+  if(!wins.length){celebrated=false;S.set(key+'-won',false)}
+ }
+ els.forEach((el,i)=>{if(i===12)return;el.addEventListener('click',()=>{marks=marks.includes(i)?marks.filter(x=>x!==i):[...marks,i];S.set(key,marks);render()})});
+ document.getElementById('clr').onclick=()=>show(`<div class="big" style="font-size:38px">New game?</div><p>This clears all the marks on Card ${n}.</p>
+  <div class="row"><button class="btn ghost" onclick="hide()">Cancel</button><button class="btn red" id="yes">Clear card</button></div>`)||
+  (document.getElementById('yes').onclick=()=>{marks=[];S.set(key,marks);celebrated=false;S.set(key+'-won',false);hide();render()});
+ render();
+}
+
+function caller(){
+ let called=S.get('bingo-called',[]);
+ app.innerHTML=`<div class="top"><a class="back" href="#">‹ Home</a><button class="btn ghost small" id="reset">New game</button></div>
+ <div class="call"><div class="lbl">Now calling</div><div class="word" id="cur"></div><div class="count" id="cnt"></div></div>
+ <div class="row" style="margin-bottom:16px"><button class="btn red" id="draw" style="width:100%;font-size:19px;padding:18px">🎁 Draw next word</button></div>
+ <div class="panel"><h2>Already called</h2><div class="chips" id="list"></div></div>
+ <div class="foot">ReadyLifeDigital · Christmas Bingo · Caller</div>`;
+ const cur=document.getElementById('cur'),cnt=document.getElementById('cnt'),list=document.getElementById('list'),draw=document.getElementById('draw');
+ function render(){
+  cur.textContent=called.length?called[called.length-1]:'Ready?';
+  cnt.textContent=`${called.length} of ${DATA.words.length} called`;
+  list.innerHTML=called.length?[...called].reverse().map(w=>`<span>${esc(w)}</span>`).join(''):'<p>Nothing yet. Tap "Draw next word" to start.</p>';
+  draw.disabled=called.length>=DATA.words.length; draw.style.opacity=draw.disabled?.5:1;
+ }
+ draw.onclick=()=>{const left=DATA.words.filter(w=>!called.includes(w));if(!left.length)return;
+  const pick=left[Math.floor(Math.random()*left.length)];called.push(pick);S.set('bingo-called',called);render();
+  cur.animate([{transform:'scale(.5)',opacity:0},{transform:'scale(1)',opacity:1}],{duration:300,easing:'cubic-bezier(.2,1.6,.4,1)'})};
+ document.getElementById('reset').onclick=()=>{show(`<div class="big" style="font-size:38px">New game?</div><p>This clears the list of called words.</p>
+  <div class="row"><button class="btn ghost" onclick="hide()">Cancel</button><button class="btn red" id="yes">Start over</button></div>`);
+  document.getElementById('yes').onclick=()=>{called=[];S.set('bingo-called',called);hide();render()}};
+ render();
+}
+
+function confetti(){
+ const c=document.getElementById('fx'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+ const cols=['#B0202A','#1E5B3A','#C99A2E','#ffffff','#2E7A4F'];
+ const P=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*5,c:cols[Math.random()*5|0],vy:2+Math.random()*3,vx:-1.5+Math.random()*3,a:Math.random()*6,va:-.2+Math.random()*.4}));
+ cancelAnimationFrame(window._fx||0);let t=0;(function f(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore()});
+ if(++t<220)window._fx=requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})();
+}
+
+function route(){hide();cancelAnimationFrame(window._fx||0);{const c=document.getElementById('fx');c.getContext('2d').clearRect(0,0,c.width,c.height)}const h=location.hash.slice(1);const m=h.match(/^card-(\d+)$/);
+ if(m)card(+m[1]);else if(h==='caller')caller();else home();window.scrollTo(0,0)}
+addEventListener('hashchange',route);route();
+</script></body></html>
